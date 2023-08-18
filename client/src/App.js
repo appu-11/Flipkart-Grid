@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Wallet from "./pages/Wallet";
 import Product from "./components/Product";
+import Cart from "./pages/Cart";
+import Profile from "./pages/Profile";
 
 function App() {
     return (
@@ -20,6 +22,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/wallet" element={<Wallet />} />
                     <Route path="/laptop" element={<Product />} />
+                    <Route path="/cart" element={<Cart/>} />
+                    <Route path="/profile" element={<Profile/>}></Route>
                 </Routes>
             </BrowserRouter>
         </Auth0Provider>

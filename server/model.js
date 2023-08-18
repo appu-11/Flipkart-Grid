@@ -12,7 +12,8 @@ const cartData = mongoose.Schema({
             price: Number,
         }],
         required: true
-    }
+    },
+
 },{timestamps: true})
 
 export default mongoose.model("cartData", cartData);

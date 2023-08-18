@@ -45,6 +45,10 @@ const Product = () => {
         }
     };
 
+    const handlebuy = () => {
+        navigate("/cart");
+    };
+
     const handleAddquant = () =>{
         setQuantity(quantity + 1);
     };
@@ -54,7 +58,7 @@ const Product = () => {
             setQuantity(quantity - 1); 
         }
     };
-    console.log(user);
+    
     return (
         <>
             <Header/>
@@ -104,7 +108,7 @@ const Product = () => {
                     </div>
                     <div className='buy'>
                         <Button className='cart' variant='light' size='lg' onClick={handleAddtocart}>Add to Cart</Button>
-                        <Button variant='dark' size='lg'>Buy Now</Button>
+                        <Button variant='dark' size='lg' onClick={handlebuy}>Buy Now</Button>
                     </div>
                 </Container>
             </div>
