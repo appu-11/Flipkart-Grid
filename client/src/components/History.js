@@ -6,9 +6,9 @@ import "./history.css";
 
 const History = () => {
     const contractaddress = process.env.REACT_APP_contract_address;
-    const [transactionhistory, setTransactionhistory] = useState(null);
-    const [history, setHistory] = useState(null);
-    const [purchasehistory, setPurchasehistory] = useState(null);
+    const [transactionhistory, setTransactionhistory] = useState([]);
+    const [history, setHistory] = useState([]);
+    const [purchasehistory, setPurchasehistory] = useState([]);
 
     useEffect(() => {
         const init = async() => {
@@ -28,8 +28,9 @@ const History = () => {
                         const HistFilter = contract.filters.history(userAddress, null);
                         const HistEvents = await contract.queryFilter(HistFilter);
                         const hist = []
-                        const keys = Object.keys(HistEvents);
-                        for(let i=0; i<keys.length; i++) {
+                        const keys = Object.keys(HistEvents).reverse();
+                        console.log(contract);
+                        for(let i = 0; i < keys.length; i++) {
                             const date = new Date(Number(HistEvents[keys[i]].args[3])*1000);
                             const temp = {
                                 value: Number(HistEvents[keys[i]].args[1]),
@@ -75,12 +76,12 @@ const History = () => {
                 </div>
             })} */}
             <div>
-                {(history) ? (
+                {(history.length > 0) ? (
                    <ul className="history-list">
                    {history.map((obj, index) => (
                      <li className="history-item" key={index}>
                        <div className="history-details">
-                         <span className="history-value">{obj.value}</span>
+                         <span className="history-value">Points: {obj.value}</span>
                          <span className="history-reason">{obj.reason}</span>
                        </div>
                        <span className="history-timestamp" style={{marginRight: "2"}}>{obj.timestamp}</span>

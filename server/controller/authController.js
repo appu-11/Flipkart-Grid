@@ -3,10 +3,8 @@ import userModel from "../models/userModel.js";
 import JWT from "jsonwebtoken";
 
 export const registerController = async (req, res) => {
-  console.log("reg");
   try {
     const { name, email, password, seller } = req.body;
-    console.log(req.body);
     if (!name) {
       return res.send({ message: "Name is required" });
     }
@@ -36,6 +34,7 @@ export const registerController = async (req, res) => {
       email,
       password: hashedPassword,
       seller,
+      claimed: false,
     }).save();
     // user.save();
 
@@ -98,6 +97,7 @@ export const loginController = async (req, res) => {
         name: user.name,
         email: user.email,
         seller: user.seller,
+        claimed: user.claimed,
       },
       token,
     });
@@ -107,5 +107,35 @@ export const loginController = async (req, res) => {
       message: "Error in login",
       error,
     });
+  }
+};
+
+
+export const claimController = async (req, res) => {
+  try{
+    const {email} = req.body;
+    const user = await userModel.findOne({email});
+    if(!user){
+      res.status(200).send({
+        success: false,
+        message: "User not found"
+      });
+    }
+    else{
+      user.claimed = true;
+      user.save();
+      res.status(200).send({
+        success:true,
+        message:"Claimed successfully",
+        user
+      });
+    }
+  }
+  catch(err){
+    console.log(err);
+    res.status(500).send({
+      success: false,
+      message:"Error in claiming"
+    })
   }
 };

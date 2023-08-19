@@ -5,6 +5,7 @@ import Button from "react-bootstrap/esm/Button";
 import { ethers } from "ethers";
 import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import History from "../components/History";
+import axios from "axios";
 
 
 const Profile = () =>{
@@ -66,19 +67,25 @@ const Profile = () =>{
                 else {
                     alert("try again");
                 }
+                const response = await axios.post('http://localhost:8080/api/auth/claim', {email: user.email});
+                localStorage.removeItem("user");
+                localStorage.setItem("user", JSON.stringify(response.data.user));
+                window.location.reload();
             } catch (error) {
               console.log("Error: ", error);
             }
         }
     };
-    
-
+    // console.log(user["claimed"], "claimed");
     return (
         <>
             <Header/>
             <div style={{ display: 'flex', justifyContent: 'space-around', margin:"auto", marginTop:"2%" }}>
                 <span>You have {balance} Royalty Coins</span>
-                <Button variant="success" onClick={handleClaim}>Claim 200 Royalty Coins</Button>
+                {
+                    (user && !user.claimed) &&
+                    <Button variant="success" onClick={handleClaim}>Claim 200 Royalty Coins</Button>
+                }
             </div>
             <div style = {{marginLeft:"10vw", fontWeight:"700"}}>History:</div>
             <History/>

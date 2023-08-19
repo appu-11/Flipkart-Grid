@@ -9,7 +9,7 @@ import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import { ethers } from "ethers";
 
 const Cart = () =>{
-    const contractaddress = "0x27d8593e22Be1Ce6c664df008bfe5794E9937bDb";
+    const contractaddress = process.env.REACT_APP_contract_address;
     const navigate = useNavigate();
     const [data, setData] = useState(null);
     const [totalprice, setTotalprice] = useState(null);

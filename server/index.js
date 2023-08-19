@@ -13,6 +13,7 @@ app.use(cors());
 
 app.use("/api/cart", cart);
 app.use("/api/auth", authRoute);
+
 app.listen(8080, () => {
   console.log("Example app listening on port 3000!");
 });

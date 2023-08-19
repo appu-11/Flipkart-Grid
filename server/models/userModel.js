@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    claimed:{
+      type: Boolean,
+      required: true,
+    }
   },
   { timestamps: true }
 );

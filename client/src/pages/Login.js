@@ -52,6 +52,7 @@ const Login = () => {
       if (res.data.success) {
         navigate("/");
         toast.success(res.data.message);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
       } else {
         toast.error(res.data.meassage);
       }
