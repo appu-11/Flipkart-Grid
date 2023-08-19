@@ -45,7 +45,7 @@ export const getcartController = async (req, res) => {
         const user = await usercartModel.findOne({email});
         if(!user) {
             res.status(200).send({
-                success: true,
+                success: false,
                 message: "Cart is empty"
             });
         }

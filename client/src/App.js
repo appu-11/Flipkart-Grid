@@ -6,6 +6,7 @@ import Wallet from "./pages/Wallet";
 import Product from "./components/Product";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
+import Machine from "./products/Machine";
 import Guideline from "./pages/Guideline";
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/wallet" element={<Wallet />} />
           <Route path="/laptop" element={<Product />} />
+                    <Route path="/machine" element={<Machine />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/guideline" element={<Guideline />} />

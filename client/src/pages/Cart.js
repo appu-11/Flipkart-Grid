@@ -7,6 +7,8 @@ import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import { ethers } from "ethers";
+import "./cart.css"
+import { toast } from "react-hot-toast";
 
 const Cart = () =>{
     const contractaddress = process.env.REACT_APP_contract_address;
@@ -30,7 +32,8 @@ const Cart = () =>{
                     setTotalprice(price);
                 }
                 else{
-                    alert("Try Again");
+                    toast.success("No items in cart");
+                    setData([]);
                 }
             }
             catch(err){
@@ -114,34 +117,44 @@ const Cart = () =>{
     
     if(data === null) {
         return(
-            <div>Loading....</div>
+            <div class="balls">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
         );
     }
 
     return(
         <>
             <Header/>
-            <Container>
-
-                {data.map((item, index) => (
-                    <div className="d-flex flex-row" key={index}>
-                        <div className="col-lg-2">
-                            <Image src={require("../components/macbook.jpg")} alt="macbook" fluid />
+            {(data && data.length > 0 ) ? (data.map((item, index) => (
+                <>
+                    <Container>
+                        <div className="d-flex flex-row" key={index}>
+                            <div className="col-lg-2">
+                                <Image src={require("../components/macbook.jpg")} alt="macbook" fluid />
+                            </div>
+                            <div className="d-flex flex-column mt-5">
+                                <span>{item.name}</span>
+                                <span>Quantity: {item.quantity}</span>
+                                <span>Price: {item.price * item.quantity}</span>
+                            </div>
                         </div>
-                        <div className="d-flex flex-column mt-5">
-                            <span>{item.name}</span>
-                            <span>Quantity: {item.quantity}</span>
-                            <span>Price: {item.price * item.quantity}</span>
-                        </div>
-                    </div>
-                ))}
-            </Container>
-            <Container className="d-flex flex-column">
-                <span>Total Price: {totalprice}</span>
-                <span>Earn {} Royalty Coins on this Order</span>
-                <span>You have {balance} Royalty Coins</span>
-                <Button onClick={handleBuy} className="col-lg-2">Buy Now</Button>
-            </Container>
+                    </Container>
+                    <Container className="d-flex flex-column">
+                        <span>Total Price: {totalprice}</span>
+                        <span>Earn {} Royalty Coins on this Order</span>
+                        <span>You have {balance} Royalty Coins</span>
+                        <Button onClick={handleBuy} className="col-lg-2">Buy Now</Button>
+                    </Container>
+                </>
+            ))) : (
+                <Container className="mt-5">
+                    Shop Now to add items to cart
+                </Container>
+            )
+        }
         </>
     )
 };

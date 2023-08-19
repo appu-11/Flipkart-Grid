@@ -59,14 +59,15 @@ const History = () => {
       }
     };
 
-    init();
-  }, []);
+        init();
+    },[]);
+    
+    if(history)
+        console.log(history, "redeemHistory");
 
-  if (history) console.log(history, "redeemHistory");
-
-  return (
-    <>
-      {/* {redeemhistory && redeemhistory[0].args.map((item, index) => {
+    return(
+        <>
+            {/* {redeemhistory && redeemhistory[0].args.map((item, index) => {
                 <div>
                     hello
                     <span>{item}</span>

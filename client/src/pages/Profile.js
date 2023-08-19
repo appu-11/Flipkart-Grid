@@ -7,15 +7,17 @@ import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import History from "../components/History";
 import axios from "axios";
 
-const Profile = () => {
-  const contractaddress = process.env.REACT_APP_contract_address;
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [balance, setBalance] = useState(0);
-  const [isClaiming, setIsClaiming] = useState(false);
-  if (user === null && localStorage.getItem("user")) {
-    setUser(JSON.parse(localStorage.getItem("user")));
-  }
+
+const Profile = () =>{
+    const contractaddress = process.env.REACT_APP_contract_address;
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [balance, setBalance] = useState(0);
+    const [isClaiming, setIsClaiming] = useState(false);
+
+    if(user === null && localStorage.getItem("user")){
+        setUser(JSON.parse(localStorage.getItem("user")));
+    }
 
   if (user === null) {
     navigate("/login");
