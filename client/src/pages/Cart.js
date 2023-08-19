@@ -5,16 +5,22 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
+import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
+import abc from "../contract_data/abc.json"
+import { ethers } from "ethers";
 
 const Cart = () =>{
+    const contractaddress = "0x27d8593e22Be1Ce6c664df008bfe5794E9937bDb";
     const navigate = useNavigate();
     const [data, setData] = useState(null);
     const [totalprice, setTotalprice] = useState(null);
+    const [balance, setBalance] = useState(0);
 
     useEffect(() => {
         const fetchData = async() => {
             try{
                 const user = JSON.parse(localStorage.getItem('user'));
+                console.log(user);
                 const res = await axios.post('http://localhost:8080/api/cart/getcart', {email: user.email});
                 if(res.data.success) {
                     setData(res.data.data);
@@ -33,21 +39,33 @@ const Cart = () =>{
                 alert("Try again");
             }
         };
+
         const getwalletData = async() => {
             try{
-                const user = JSON.parse(localStorage.getItem('user'));
-                // const key = user.key
-                const res = await axios.post('http://localhost:8080/api/wallet/getwallet', {email: user.email});
-                if(res.data.success) {
-                    console.log(res.data.data);
-                }
-                else{
-                    alert("Try Again");
+                if (window.ethereum) {
+                    try {
+                        const provider = new ethers.BrowserProvider(window.ethereum);
+                        const signer = await provider.getSigner();
+                        const contract = new ethers.Contract(
+                            contractaddress,
+                            abc.abi,
+                            signer
+                        );
+                        // const signer = provider.getSigner();
+                        // console.log("signer: ", signer)
+                        // const address = (await signer).address;
+                        //   const useraddress = "0x7c167Fd2Be04899589706afCdD22Ce269F71b9f1";
+                        // const boo = await contract.registerUser();
+                        // await boo.wait();
+                        const res = await contract.balanceOf();
+                        setBalance(Number(res));
+                    } catch (error) {
+                      console.log("Error: ", error);
+                    }
                 }
             }
             catch(err){
                 console.log(err);
-                alert("Try again");
             }
         };
         if(localStorage.getItem('user') === null) {
@@ -55,12 +73,44 @@ const Cart = () =>{
         }
         else{
             fetchData();
-            // getwalletData();
+            getwalletData();
         }
     },[]);
 
-    const handleBuy = () => {
-
+    const handleBuy = async() => {
+        try{
+            if (window.ethereum) {
+                try {
+                    const provider = new ethers.BrowserProvider(window.ethereum);
+                    const signer = await provider.getSigner();
+                    const contract = new ethers.Contract(
+                        contractaddress,
+                        abc.abi,
+                        signer
+                    );
+                    // const signer = provider.getSigner();
+                    // console.log("signer: ", signer)
+                    // const address = (await signer).address;
+                    //   const useraddress = "0x7c167Fd2Be04899589706afCdD22Ce269F71b9f1";
+                    // const boo = await contract.registerUser();
+                    // await boo.wait();
+                    const res = await contract.redeem(balance);
+                    await res.wait();
+                    if(res){
+                        alert("Transaction Successful");
+                        setBalance(0);
+                    }
+                    else{
+                        alert("try again");
+                    }
+                } catch (error) {
+                  console.log("Error: ", error);
+                }
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
     };
     
     if(data === null) {
@@ -89,7 +139,8 @@ const Cart = () =>{
             </Container>
             <Container className="d-flex flex-column">
                 <span>Total Price: {totalprice}</span>
-                <span>Earn {} Coins on this Order</span>
+                <span>Earn {} Royalty Coins on this Order</span>
+                <span>You have {balance} Royalty Coins</span>
                 <Button onClick={handleBuy} className="col-lg-2">Buy Now</Button>
             </Container>
         </>
