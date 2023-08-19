@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Navbar";
 import Button from "react-bootstrap/esm/Button";
 import { ethers } from "ethers";
-import abc from "../contract_data/abc.json";
+import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import History from "../components/History";
 
 
@@ -31,7 +31,7 @@ const Profile = () =>{
                         const signer = await provider.getSigner();
                         const contract = new ethers.Contract(
                             contractaddress,
-                            abc.abi,
+                            RoyaltyCoin.abi,
                             signer
                         );
                         const res = await contract.balanceOf();
@@ -55,7 +55,7 @@ const Profile = () =>{
                 const signer = await provider.getSigner();
                 const contract = new ethers.Contract(
                     contractaddress,
-                    abc.abi,
+                    RoyaltyCoin.abi,
                     signer
                 );
                 const res = await contract.registerUser();
@@ -76,8 +76,11 @@ const Profile = () =>{
     return (
         <>
             <Header/>
-            <Button variant="success" onClick={handleClaim}>Claim 200 Royalty Coins</Button>
-            <span>You have {balance} Royalty Coins</span>
+            <div style={{ display: 'flex', justifyContent: 'space-around', margin:"auto", marginTop:"2%" }}>
+                <span>You have {balance} Royalty Coins</span>
+                <Button variant="success" onClick={handleClaim}>Claim 200 Royalty Coins</Button>
+            </div>
+            <div style = {{marginLeft:"10vw", fontWeight:"700"}}>History:</div>
             <History/>
         </>
     )

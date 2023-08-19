@@ -6,7 +6,6 @@ import axios from "axios";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
 import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
-import abc from "../contract_data/abc.json"
 import { ethers } from "ethers";
 
 const Cart = () =>{
@@ -48,7 +47,7 @@ const Cart = () =>{
                         const signer = await provider.getSigner();
                         const contract = new ethers.Contract(
                             contractaddress,
-                            abc.abi,
+                            RoyaltyCoin.abi,
                             signer
                         );
                         // const signer = provider.getSigner();
@@ -85,7 +84,7 @@ const Cart = () =>{
                     const signer = await provider.getSigner();
                     const contract = new ethers.Contract(
                         contractaddress,
-                        abc.abi,
+                        RoyaltyCoin.abi,
                         signer
                     );
                     // const signer = provider.getSigner();

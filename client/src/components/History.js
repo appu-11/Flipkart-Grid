@@ -1,6 +1,8 @@
 import { ethers } from "ethers";
-import abc from "../contract_data/abc.json";
+import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import { useState, useEffect } from "react";
+import Container from "react-bootstrap/esm/Container";
+import "./history.css";
 
 const History = () => {
     const contractaddress = process.env.REACT_APP_contract_address;
@@ -17,15 +19,27 @@ const History = () => {
                         const signer = await provider.getSigner();
                         const contract = new ethers.Contract(
                             contractaddress,
-                            abc.abi,
+                            RoyaltyCoin.abi,
                             signer
                         );
                         const userAddress = (await signer).address;
-
+                        console.log(userAddress);
                         // For Users
-                        const HistFilter = contract.filters.history(userAddress);
+                        const HistFilter = contract.filters.history(userAddress, null);
                         const HistEvents = await contract.queryFilter(HistFilter);
-                        setHistory(HistEvents);
+                        const hist = []
+                        const keys = Object.keys(HistEvents);
+                        for(let i=0; i<keys.length; i++) {
+                            const date = new Date(Number(HistEvents[keys[i]].args[3])*1000);
+                            const temp = {
+                                value: Number(HistEvents[keys[i]].args[1]),
+                                reason: HistEvents[keys[i]].args[2],
+                                timestamp: date.toLocaleString()
+                            }
+                            hist.push(temp);
+                        }
+                        
+                        setHistory(hist);
 
                         // For Sellers
                         // const transferHistFilter = contract.filters.transferhist(userAddress);
@@ -43,7 +57,8 @@ const History = () => {
             }catch(err){
                 console.log(err);
                 console.log("error in profile");
-            }}
+            }
+        }
 
         init();
     },[]);
@@ -60,7 +75,19 @@ const History = () => {
                 </div>
             })} */}
             <div>
-                {(history && Object.keys(history).length > 0) ? Number(history[0].args[1]) : "Nothing to Show"}
+                {(history) ? (
+                   <ul className="history-list">
+                   {history.map((obj, index) => (
+                     <li className="history-item" key={index}>
+                       <div className="history-details">
+                         <span className="history-value">{obj.value}</span>
+                         <span className="history-reason">{obj.reason}</span>
+                       </div>
+                       <span className="history-timestamp" style={{marginRight: "2"}}>{obj.timestamp}</span>
+                     </li>
+                   ))}
+                 </ul>
+                ) : "Nothing to Show"}
             </div>
         </>
     );
