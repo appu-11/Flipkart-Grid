@@ -67,8 +67,8 @@ const Header = () => {
                 Health & Professional Care
               </NavDropdown.Item>
               <NavDropdown.Item href="/laptop">Laptop</NavDropdown.Item>
-              <NavDropdown.Item href="#action5">
-                Smart Home Automation
+              <NavDropdown.Item href="/machine">
+                Washing Machine
               </NavDropdown.Item>
             </NavDropdown>
             <NavDropdown

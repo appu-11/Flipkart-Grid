@@ -1,18 +1,21 @@
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
 import "./Product.css";
-import Header from './Navbar';
+import Header from '../components/Navbar';
 import Button from 'react-bootstrap/esm/Button';
+import machine from './images/machine.jpg';
+import machine1 from './images/machine1.jpg';
+import machine2 from './images/machine2.jpg';
+import machine3 from './images/machine3.jpg';
 import { useState } from 'react';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 
 const Machine = () => {
-    const [img, setImg] = useState(macbook);
+    const [img, setImg] = useState(machine);
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState(0);
     const price = 36990;
-    const oriprice = 44900;
     const [user, setUser] = useState(null);
     const name = "SAMSUNG 8 kg 5 Star, AI Ecobubble,Wi-Fi,Hygiene Steam,Digital Inverter Fully Automatic Front Load Washing Machine with In-built Heater Black  (WW80T504DAB1TL)";
     const onhover = (imageSrc) => {
@@ -60,36 +63,39 @@ const Machine = () => {
             <Header/>
             <div className = "product">
                 <Container className='d-flex flex-col'>
-                    <div  className='image'>
-                        <Image src = {macbook} alt='macbook' onMouseEnter={() => onhover(macbook)} fluid/>
-                        <Image src = {macbooks} alt='macbook' onMouseEnter={() => onhover(macbooks)} fluid/>
-                        <Image src = {m2chip} alt='macbook' onMouseEnter={() => onhover(m2chip)} fluid/>
-                        <Image src = {macbookdisplay} alt='macbook' onMouseEnter={() => onhover(macbookdisplay)} fluid/>
-                        <Image src = {box} alt='macbook' onMouseEnter={() => onhover(box)} fluid/>
+                    <div  className='image mr-2'>
+                        <Image src = {machine} alt='macbook' onMouseEnter={() => onhover(machine)} className='mt-4' fluid/>
+                        <Image src = {machine1} alt='macbook' onMouseEnter={() => onhover(machine1)} className='mt-2' fluid/>
+                        <Image src = {machine2} alt='macbook' onMouseEnter={() => onhover(machine2)} className='mt-2' fluid/>
+                        <Image src = {machine3} alt='macbook' onMouseEnter={() => onhover(machine3)} className='mt-2' fluid/>
                     </div>
                     <div>
-                        <Image src = {img} alt='image' fluid/>
+                        <Image src = {img} alt='image' width={"90%"} className='mt-5' style={{marginLeft:"2vw"}} fluid/>
                     </div>
                 </Container>
                 <Container className="details">
                     <div>
                         <span>{name}</span>
                     </div>
-                    <div style={{marginTop:"1vh"}}>
-                        Price: &#8377;1,02,000
+                    <div style={{marginTop:"1vh", display:"flex", flexDirection:"row"}}>
+                        <span>Price: &#8377;36,990</span>&nbsp;&nbsp;
+                        <p style={{textDecoration:"line-through", opacity:"0.8"}}>44,900</p>
                     </div>
                     <div style={{marginTop:"1vh"}}>
                         Highlights:
                         <div className='highlights' >
                             <ul  className='highlist'>
                                 <li>
-                                    Stylish & Portable Thin and Light Laptop
+                                    Fully Automatic Front Load Washing Machines have Great Wash Quality with very less running cost
                                 </li>
                                 <li>
-                                    13.3 inch Quad LED Backlit IPS Display (227 PPI, 400 nits Brightness, Wide Colour (P3), True Tone Technology)
+                                    1400 rpm : Higher the spin speed, lower the drying time
                                 </li>
                                 <li>
-                                    Light Laptop without Optical Disk Drive
+                                    5 Star Rating
+                                </li>
+                                <li>
+                                    8 kg
                                 </li>
                             </ul>
                         </div>

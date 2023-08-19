@@ -80,7 +80,7 @@ const Product = () => {
                         <span>{name}</span>
                     </div>
                     <div style={{marginTop:"1vh"}}>
-                        Price: &#8377;1,02,000
+                        Price: &#8377;{price}
                     </div>
                     <div style={{marginTop:"1vh"}}>
                         Highlights:
