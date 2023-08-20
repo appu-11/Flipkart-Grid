@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Navbar";
 import Button from "react-bootstrap/esm/Button";
 import { ethers } from "ethers";
-import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
+import Sikka from "../contract_data/Sikka.json";
 import History from "../components/History";
 import axios from "axios";
 
@@ -45,7 +45,7 @@ const Profile = () =>{
             const signer = await provider.getSigner();
             const contract = new ethers.Contract(
               contractaddress,
-              RoyaltyCoin.abi,
+              Sikka.abi,
               signer
             );
             const res = await contract.balanceOf();
@@ -53,6 +53,10 @@ const Profile = () =>{
           } catch (error) {
             console.log("Error: ", error);
           }
+        }
+        else{
+          alert("Please install Metamask");
+          window.open("https://metamask.io/","_blank");
         }
       } catch (err) {
         console.log(err);
@@ -71,7 +75,7 @@ const Profile = () =>{
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
           contractaddress,
-          RoyaltyCoin.abi,
+          Sikka.abi,
           signer
         );
         const res = await contract.registerUser();
@@ -100,7 +104,7 @@ const Profile = () =>{
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
             contractaddress,
-            RoyaltyCoin.abi,
+            Sikka.abi,
             signer
         );
         const res = await contract.purchaseTokens(numberOfTokens);
@@ -136,7 +140,7 @@ const Profile = () =>{
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
             contractaddress,
-            RoyaltyCoin.abi,
+            Sikka.abi,
             signer
         );
         try{

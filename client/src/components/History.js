@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
+import Sikka from "../contract_data/Sikka.json";
 import { useState, useEffect } from "react";
 import Container from "react-bootstrap/esm/Container";
 import "./history.css";
@@ -20,7 +20,7 @@ const History = () => {
             const signer = await provider.getSigner();
             const contract = new ethers.Contract(
               contractaddress,
-              RoyaltyCoin.abi,
+              Sikka.abi,
               signer
             );
             const userAddress = (await signer).address;

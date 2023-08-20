@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Button from "react-bootstrap/esm/Button";
 import { useNavigate } from "react-router-dom";
-import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
+import Sikka from "../contract_data/Sikka.json";
 import { ethers } from "ethers";
 import "./cart.css";
 import { toast } from "react-hot-toast";
@@ -30,7 +30,7 @@ const Cart = () => {
             const signer = await provider.getSigner();
             const contract = new ethers.Contract(
               contractaddress,
-              RoyaltyCoin.abi,
+              Sikka.abi,
               signer
             );
             const res = await contract.balanceOf();
@@ -95,7 +95,7 @@ const Cart = () => {
           const signer = await provider.getSigner();
           const contract = new ethers.Contract(
             contractaddress,
-            RoyaltyCoin.abi,
+            Sikka.abi,
             signer
           );
           // const signer = provider.getSigner();
@@ -130,7 +130,7 @@ const Cart = () => {
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
           contractaddress,
-          RoyaltyCoin.abi,
+          Sikka.abi,
           signer
         );
         const earn = await contract.earn(earncoins);
@@ -168,8 +168,9 @@ const Cart = () => {
         }}
       >
         {data && data.length > 0 ? (
+        <Container className="mt-4">{
           data.map((item, index) => (
-            <div style={{ marginTop: "5vh" }}>
+            <div style={{ marginTop: "5vh", display:"flex", flexDirection:"column" }}>
               <Container>
                 <div className="d-flex flex-row" key={index}>
                   <div className="col-lg-2">
@@ -188,7 +189,7 @@ const Cart = () => {
                       />
                     )}
                   </div>
-                  <div className="d-flex flex-column mt-5">
+                  <div className="d-flex flex-column mt-4">
                     <span>{item.name}</span>
                     <span>Quantity: {item.quantity}</span>
                     <span>Price: &#8377; {item.price * item.quantity}</span>
@@ -196,7 +197,8 @@ const Cart = () => {
                 </div>
               </Container>
             </div>
-          ))
+          ))}
+          </Container>
         ) : (
           <Container className="mt-5">Shop Now to add items to cart</Container>
         )}
@@ -214,7 +216,7 @@ const Cart = () => {
           }}
         >
           <span
-            style={{ marginTop: "2vh", marginLeft: "5vw", fontWeight: "bold" }}
+            style={{ marginTop: "2vh", fontWeight: "bold", textAlign:"center" }}
           >
             COIN BALANCE : {balance} <i class="bi bi-coin"></i>
           </span>
@@ -224,7 +226,8 @@ const Cart = () => {
             Total Price ({data.length} items): &#8377; {totalprice}
           </span>
           <span style={{ marginTop: "3vh" }}>
-            Redeem {maxcoin} Coins to avail &#8377; {discount} Discount
+            Redeem {maxcoin} Coins to avail<br></br>
+            &#8377; {discount} Discount
           </span>
           <Button
             onClick={handleRedeem}
