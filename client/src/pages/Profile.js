@@ -152,7 +152,7 @@ const Profile = () => {
           signer
         );
         try {
-          const res = await contract.Tansfer(giftPublicKey, giftToken);
+          const res = await contract.Transfer(giftPublicKey, giftToken);
           await res.wait();
           const bal = await contract.balanceOf();
           setBalance(Number(bal));

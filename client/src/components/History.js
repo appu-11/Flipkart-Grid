@@ -122,26 +122,49 @@ const History = () => {
         transactionhistory.length > 0 ||
         purchasehistory.length > 0 ? (
           <>
-            {history.length > 0 && (
+             {history.length > 0 && (
               <>
-                <div style={{ marginLeft: "10vw", fontWeight: "700" }}>
-                  History:
-                </div>
-                <ul className="history-list">
-                  {/* Rendering history items */}
-                </ul>
+                  <ul className="history-list">
+                    {history.map((obj, index) => (
+                      <li className="history-item" key={index}>
+                        <div className="history-details">
+                          <span className="history-value">Points: {obj.value}</span>
+                          <span className="history-reason">{obj.reason}</span>
+                          <span
+                            className="history-timestamp"
+                            style={{ marginLeft: "2" }}
+                          >
+                            {obj.timestamp}
+                          </span>
+                          </div>
+                        </li>
+                      ))
+                      }
+                  </ul>
               </>
             )}
-
             {transactionhistory.length > 0 && (
               <>
-                <div style={{ marginLeft: "10vw", fontWeight: "700" }}>
-                  Transaction History:
-                </div>
-                <ul className="history-list">
-                  {/* Rendering transaction history items */}
-                </ul>
-              </>
+              <div style={{ marginLeft: "10vw", fontWeight: "700" }}>
+                Transfer History:
+              </div>
+              <ul className="history-list">
+                {transactionhistory.map((obj, index) => (
+                  <li className="history-item" key={index}>
+                    <div className="history-details">
+                      <span className="history-value">Points: {obj.value}</span>
+                      <span className="history-reason">To User address: {obj.touser}</span>
+                      <span
+                            className="history-timestamp"
+                            style={{ marginRight: "2" }}
+                          >
+                            {obj.timestamp}
+                          </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </>
             )}
 
             {purchasehistory.length > 0 && (
@@ -150,7 +173,19 @@ const History = () => {
                   Purchase History:
                 </div>
                 <ul className="history-list">
-                  {/* Rendering purchase history items */}
+                  {purchasehistory.map((obj, index) => (
+                    <li className="history-item" key={index}>
+                      <div className="history-details">
+                        <span className="history-value">Points: {obj.value}</span>
+                        <span
+                            className="history-timestamp"
+                            style={{ marginRight: "2" }}
+                          >
+                            {obj.timestamp}
+                          </span>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </>
             )}
