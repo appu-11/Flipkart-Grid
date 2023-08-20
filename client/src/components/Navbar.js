@@ -83,7 +83,7 @@ const Header = () => {
               <NavDropdown.Item href="#action6">Kids Wear</NavDropdown.Item>
               <NavDropdown.Item href="#action5">Footwear</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/guideline">Royalty-Coin</Nav.Link>
+            <Nav.Link href="/guideline">Sikka</Nav.Link>
           </Nav>
           <Form className="d-flex col-md-4">
             <Form.Control

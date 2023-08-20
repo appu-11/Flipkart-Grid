@@ -74,7 +74,7 @@ const Login = () => {
         //   user: res.data.user,
         //   token: res.data.token,
         // });
-        localStorage.setItem("user", JSON.stringify(res.data));
+        localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/");
       } else if (res.data.flag === 2) {
         toast.error("Retry!!");
