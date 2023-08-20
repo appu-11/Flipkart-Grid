@@ -56,11 +56,10 @@ const Profile = () => {
           } catch (error) {
             console.log("Error: ", error);
           }
-        } else {
-          toast.error("Please install Metamask", {
-            position: toast.POSITION.TOP_RIGHT,
-          });
-          window.open("https://metamask.io/", "_blank");
+        }
+        else{
+          alert("Please install metamask");
+          window.open("https://metamask.io/","_blank");
         }
       } catch (err) {
         console.log(err);
