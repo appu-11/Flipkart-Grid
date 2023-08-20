@@ -7,12 +7,16 @@ import RoyaltyCoin from "../contract_data/RoyaltyCoin.json";
 import History from "../components/History";
 import axios from "axios";
 
-const Profile = () => {
-  const contractaddress = process.env.REACT_APP_contract_address;
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-  const [balance, setBalance] = useState(0);
-  const [isClaiming, setIsClaiming] = useState(false);
+
+const Profile = () =>{
+    const contractaddress = process.env.REACT_APP_contract_address;
+    const navigate = useNavigate();
+    const [user, setUser] = useState(null);
+    const [balance, setBalance] = useState(0);
+    const [isClaiming, setIsClaiming] = useState(false);
+    const [numberOfTokens, setNumberOfTokens] = useState(0);
+    const [giftPublicKey, setGiftPublicKey] = useState('');
+    const [giftToken, setGiftToken] = useState(0);
 
   if (user === null && localStorage.getItem("user")) {
     setUser(JSON.parse(localStorage.getItem("user")));
@@ -22,6 +26,15 @@ const Profile = () => {
     navigate("/login");
   }
   console.log(user);
+
+  const handleTokenChange = (event) => {
+    let newValue = event.target.value;
+    newValue = newValue.replace(/^0+/, '');
+
+    if (newValue === '' || (parseInt(newValue, 10) <= 100000 && parseInt(newValue, 10) > 0)) {
+      setNumberOfTokens(newValue);
+    }
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -80,10 +93,73 @@ const Profile = () => {
       }
     }
   };
-  //   const handleBuytoken = ()=>{
+  const handleBuyClick = async() => {
+    try{
+      if(window.ethereum){
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(
+            contractaddress,
+            RoyaltyCoin.abi,
+            signer
+        );
+        const res = await contract.purchaseTokens(numberOfTokens);
+        await res.wait();
+        const bal = await contract.balanceOf();
+        setBalance(Number(bal));
+        setNumberOfTokens(0);
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+    
+  };
 
-  //   }
-  // console.log(user["claimed"], "claimed");
+  const handlegiftTokenChange = (event) => {
+    let newValue = event.target.value;
+    newValue = newValue.replace(/^0+/, '');
+
+    if (newValue === '' || (parseInt(newValue, 10) <= 500 && parseInt(newValue, 10) > 0)) {
+      setGiftToken(newValue);
+    }
+  }
+  
+  const handlegiftPublicKeyChange = (event) => {
+    setGiftPublicKey(event.target.value);
+  }
+
+  const handleSubmitgift = async() => {
+    try{
+      if(window.ethereum){
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+        const contract = new ethers.Contract(
+            contractaddress,
+            RoyaltyCoin.abi,
+            signer
+        );
+        try{
+
+          const res = await contract.Tansfer(giftPublicKey, giftToken);
+          await res.wait();
+          const bal = await contract.balanceOf();
+          setBalance(Number(bal));
+          setGiftToken(0);
+          setGiftPublicKey('');
+        }
+        catch(error){
+          console.log(error.message);
+          alert(error.message)
+        }
+      }
+    }
+    catch(err){
+      console.log(err);
+      console.log("error in sending gift");
+    }
+  };
+
   return (
     <>
       <Header />
@@ -114,20 +190,45 @@ const Profile = () => {
             <input
               placeholder="Number of tokens"
               style={{ marginRight: "3vw", width: "30vw", marginLeft: "1vw" }}
+              type="number"
+              min="1"
+              value={numberOfTokens}
+              onChange={handleTokenChange}
+              max="100000"
+              onKeyDown={(e) => {
+                if (e.key === '-') {
+                  e.preventDefault();
+                }
+              }}
+              onSubmit={handleBuyClick}
             ></input>
-            <Button>Buy</Button>
+            <Button onClick={handleBuyClick}>Buy</Button>
           </div>
           <div className="gift-token">
             <span>Gift tokens:</span>
             <input
               placeholder="public-key"
               style={{ width: "17vw", marginLeft: "1.3vw", marginRight: "1vw" }}
+              type="text"
+              value={giftPublicKey}
+              onChange={handlegiftPublicKeyChange} 
             ></input>
             <input
               placeholder="amount"
               style={{ width: "12vw", marginRight: "2.8vw" }}
+              type="number"
+              min="1"
+              value={giftToken}
+              onChange={handlegiftTokenChange}
+              max="500"
+              onKeyDown={(e) => {
+                if (e.key === '-') {
+                  e.preventDefault();
+                }
+              }}
+              onSubmit={handleSubmitgift}
             ></input>
-            <Button>Gift</Button>
+            <Button onClick={handleSubmitgift}>Gift</Button>
           </div>
         </div>
       )}

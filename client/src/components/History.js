@@ -15,6 +15,7 @@ const History = () => {
       try {
         if (window.ethereum) {
           try {
+            const user = JSON.parse(localStorage.getItem("user"));
             const provider = new ethers.BrowserProvider(window.ethereum);
             const signer = await provider.getSigner();
             const contract = new ethers.Contract(
@@ -23,32 +24,58 @@ const History = () => {
               signer
             );
             const userAddress = (await signer).address;
-            console.log(userAddress);
+
             // For Users
-            const HistFilter = contract.filters.history(userAddress, null);
-            const HistEvents = await contract.queryFilter(HistFilter);
-            const hist = [];
-            const keys = Object.keys(HistEvents).reverse();
-            console.log(contract);
-            for (let i = 0; i < keys.length; i++) {
-              const date = new Date(Number(HistEvents[keys[i]].args[3]) * 1000);
-              const temp = {
-                value: Number(HistEvents[keys[i]].args[1]),
-                reason: HistEvents[keys[i]].args[2],
-                timestamp: date.toLocaleString(),
-              };
-              hist.push(temp);
+            if(user.seller === false){
+
+              const HistFilter = contract.filters.history(userAddress, null);
+              const HistEvents = await contract.queryFilter(HistFilter);
+              const hist = [];
+              const keys = Object.keys(HistEvents).reverse();
+              console.log(contract);
+              for (let i = 0; i < keys.length; i++) {
+                const date = new Date(Number(HistEvents[keys[i]].args[3]) * 1000);
+                const temp = {
+                  value: Number(HistEvents[keys[i]].args[1]),
+                  reason: HistEvents[keys[i]].args[2],
+                  timestamp: date.toLocaleString(),
+                };
+                hist.push(temp);
+              }
+              setHistory(hist);
             }
 
-            setHistory(hist);
-
             // For Sellers
-            // const transferHistFilter = contract.filters.transferhist(userAddress);
-            // const transferHistEvents = await contract.queryFilter(transferHistFilter);
-            // setTransactionhistory(transferHistEvents);
-            // const purchaseHistFilter = contract.filters.PurchasedTokens(userAddress);
-            // const purchaseHistEvents = await contract.queryFilter(purchaseHistFilter);
-            // setPurchasehistory(purchaseHistEvents);
+            if(user.seller === true){
+              const transferHistFilter = contract.filters.transferhist(userAddress);
+              const transferHistEvents = await contract.queryFilter(transferHistFilter);
+              const hist = [];
+              const keys = Object.keys(transferHistEvents).reverse();
+              for(let i = 0; i < keys.length; i++) {
+                const date = new Date(Number(transferHistEvents[keys[i]].args[3]) * 1000);
+                const temp = {
+                  value: Number(transferHistEvents[keys[i]].args[2]),
+                  touser: transferHistEvents[keys[i]].args[1],
+                  timestamp: date.toLocaleString(),
+                };
+                hist.push(temp);
+              }
+              setTransactionhistory(hist);
+              const purchaseHistFilter = contract.filters.PurchasedTokens(userAddress);
+              const purchaseHistEvents = await contract.queryFilter(purchaseHistFilter);
+              const hist1 = [];
+              const keys1 = Object.keys(purchaseHistEvents).reverse();
+              for(let i = 0; i < keys1.length; i++) {
+                const date = new Date(Number(purchaseHistEvents[keys1[i]].args[2]) * 1000);
+                const temp = {
+                  value: Number(purchaseHistEvents[keys1[i]].args[1]),
+                  timestamp: date.toLocaleString(),
+                };
+                hist1.push(temp);
+              }
+              // setPurchasehistory(purchaseHistEvents);
+              setPurchasehistory(hist1);
+            }
           } catch (error) {
             console.log("Error: ", error);
           }
@@ -64,7 +91,13 @@ const History = () => {
     
     if(history)
         console.log(history, "redeemHistory");
-
+    if(purchasehistory){
+      console.log(purchasehistory,"purchasehistory")
+    }
+    if(transactionhistory){
+      console.log(transactionhistory,"transactionhistory")
+    }
+    
     return(
         <>
             {/* {redeemhistory && redeemhistory[0].args.map((item, index) => {
