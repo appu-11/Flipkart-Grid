@@ -69,6 +69,7 @@ const Product = () => {
     return (
         <>
             <Header/>
+            <ToastContainer/>
             <div className = "product">
                 <Container className='d-flex flex-col'>
                     <div  className='image'>

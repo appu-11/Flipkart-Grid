@@ -36,7 +36,7 @@ const Guideline = () => {
           </ul>
         </div>
         <div className="content">
-          <h2 style={{ marginTop: "3vh", fontSize: "large" }}>For Sellers</h2>
+          <h2 style={{ marginTop: "2vh", fontSize: "large" }}>For Sellers</h2>
           <ul>
             <li>1) Value of 20 sikka is equivalent to 1INR</li>
             <li>

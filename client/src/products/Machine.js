@@ -52,6 +52,7 @@ const Machine = () => {
     };
 
     const handlebuy = () => {
+        handleAddtocart();
         navigate("/cart");
     };
 
