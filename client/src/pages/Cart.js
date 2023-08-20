@@ -19,36 +19,9 @@ const Cart = () =>{
     const [balance, setBalance] = useState(0);
     const [maxcoin, setMaxcoin] = useState(0);
     const [inprocess, setInprocess] = useState(false);
+    const [earncoins, setEarncoins] = useState(0);
 
     useEffect(() => {
-        const fetchData = async() => {
-            try{
-                const user = JSON.parse(localStorage.getItem('user'));
-                console.log(user);
-                const res = await axios.post('http://localhost:8080/api/cart/getcart', {email: user.email});
-                if(res.data.success) {
-                    setData(res.data.data);
-                    let price = 0;
-                    for(let i = 0; i < res.data.data.length; i++) {
-                        price += res.data.data[i].price * res.data.data[i].quantity;
-                    }
-                    let temp = Math.min(500, Math.ceil((price/100)*5));
-                    let x = Math.ceil(temp/50);
-                    setTotalprice(price);
-                    setMaxcoin(x);
-                    setDiscount(temp);
-                }
-                else{
-                    toast.success("No items in cart");
-                    setData([]);
-                }
-            }
-            catch(err){
-                console.log(err);
-                alert("Try again");
-            }
-        };
-
         const getwalletData = async() => {
             try{
                 if (window.ethereum) {
@@ -75,12 +48,47 @@ const Cart = () =>{
             alert("Please login to view cart");
         }
         else{
-            fetchData();
             getwalletData();
         }
     },[]);
 
-    const handleBuy = async() => {
+    useEffect(() => {
+        const fetchData = async() => {
+            try{
+                const user = JSON.parse(localStorage.getItem('user'));
+                console.log(user);
+                const res = await axios.post('http://localhost:8080/api/cart/getcart', {email: user.email});
+                if(res.data.success) {
+                    setData(res.data.data);
+                    let price = 0;
+                    for(let i = 0; i < res.data.data.length; i++) {
+                        price += res.data.data[i].price * res.data.data[i].quantity;
+                    }
+                    let temp = Math.min(100, Math.ceil((price/100)*5));
+                    let x = Math.min(balance, temp * 20);
+                    temp = Math.floor(x/20);
+                    setTotalprice(price);
+                    setMaxcoin(x);
+                    setDiscount(temp);
+                    setEarncoins(Math.min(100, Math.ceil((price/100)*2.5)));
+                    console.log(x,"x");
+                    console.log(temp,"temp");
+                    console.log(balance,"balance");
+                }
+                else{
+                    toast.success("No items in cart");
+                    setData([]);
+                }
+            }
+            catch(err){
+                console.log(err);
+                alert("Try again");
+            }
+        };
+        fetchData();
+    },[balance]);
+
+    const handleRedeem = async() => {
         try{
             if (window.ethereum) {
                 try {
@@ -96,11 +104,9 @@ const Cart = () =>{
                     const res = await contract.redeem(balance);
                     await res.wait();
                     if(res){
-                        alert("Transaction Successful");
-                        setBalance(0);
-                        const user = JSON.parse(localStorage.getItem('user'));
-                        const response = await axios.post("http://localhost:8080/api/cart/emptycart", {email: user.email});
-                        navigate("/profile");
+                        alert("Coins Redeemed Successful");
+                        setBalance(balance - maxcoin);
+                        handleBuy();
                     }
                     else{
                         alert("try again");
@@ -114,6 +120,34 @@ const Cart = () =>{
             console.log(err);
         }
     };
+
+    const handleBuy = async() =>{
+        try{
+            const user = JSON.parse(localStorage.getItem('user'));
+            const response = await axios.post("http://localhost:8080/api/cart/emptycart", {email: user.email});
+            if(response){
+                alert("Transaction Successful");
+                const provider = new ethers.BrowserProvider(window.ethereum);
+                const signer = await provider.getSigner();
+                const contract = new ethers.Contract(
+                    contractaddress,
+                    RoyaltyCoin.abi,
+                    signer
+                );
+                const earn = await contract.earn(earncoins);
+                await earn.wait();
+                alert("You Earned Royalty Coins");
+                navigate("/profile");
+            }
+            else{
+                alert("try again");
+            }
+        }
+        catch(err){
+            console.log(err);
+        }
+    };
+    
     
     if(data === null) {
         return(
@@ -154,13 +188,13 @@ const Cart = () =>{
                 </Container>
             )
             }
-                <Container className="d-flex flex-column mt-5">
-                    <span>Total Price: {totalprice}</span>
-                    <span>Earn {} Royalty Coins on this Order</span>
-                    <span>You have {balance} Royalty Coins</span>
-                    <span>Redeem {maxcoin} Coins to avail &#8377; {discount} Discount</span>
-                    <Button onClick={handleBuy} className="col-lg-2" disabled={inprocess}>Buy Now</Button>
-                </Container>
+            <Container className="d-flex flex-column mt-5">
+                <span>Total Price: &#8377; {totalprice}</span>
+                <span>You have {balance} Royalty Coins</span>
+                <span>Redeem {maxcoin} Coins to avail &#8377; {discount} Discount</span>
+                <Button onClick={handleRedeem} className="col-lg-2" disabled={inprocess}>Redeem Now</Button>
+                <Button onClick={handleBuy} className="col-lg-2" disabled={inprocess}>Buy Now</Button>
+            </Container>
         </>
     )
 };
