@@ -10,6 +10,7 @@ import Header from './Navbar';
 import Button from 'react-bootstrap/esm/Button';
 import { useState } from 'react';
 import axios from 'axios';
+import {toast,ToastContainer} from "react-toastify"
 import {useNavigate} from 'react-router-dom';
 
 const Product = () => {
@@ -29,7 +30,9 @@ const Product = () => {
 
     const handleAddtocart = async() => {
         if(user === null) {
-            alert("Please login to add to cart");
+            toast.error("Please Login to Add Items !!", {
+                position: toast.POSITION.TOP_RIGHT
+            });
             navigate("/login");
         }
         else{
@@ -37,10 +40,14 @@ const Product = () => {
             console.log(email);
             const res = await axios.post('http://localhost:8080/api/cart/addtocart', {name, quantity, email, price});
             if(res.data.success) {
-                alert("Added to cart");
+                toast.success("Added to cart !", {
+                    position: toast.POSITION.TOP_RIGHT
+                });
             }
             else{
-                alert("Error in adding to cart");
+                toast.error("Error in adding to cart !", {
+                    position: toast.POSITION.TOP_RIGHT
+                });
             }
         }
     };
@@ -86,13 +93,13 @@ const Product = () => {
                         Highlights:
                         <div className='highlights' >
                             <ul  className='highlist'>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     Stylish & Portable Thin and Light Laptop
                                 </li>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     13.3 inch Quad LED Backlit IPS Display (227 PPI, 400 nits Brightness, Wide Colour (P3), True Tone Technology)
                                 </li>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     Light Laptop without Optical Disk Drive
                                 </li>
                             </ul>

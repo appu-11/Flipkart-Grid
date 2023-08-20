@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import {toast, ToastContainer} from 'react-toastify';
 import axios from "axios";
 import {
   MDBContainer,
@@ -50,15 +50,15 @@ const Login = () => {
       });
       console.log(res.data);
       if (res.data.success) {
-        navigate("/");
         toast.success(res.data.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
+        navigate("/profile");
       } else {
         toast.error(res.data.meassage);
       }
     } catch (error) {
       console.log(error);
-      toast.error("something went wrong");
+      toast.error("Something went wrong!");
     }
   };
   const handleLogin1 = async () => {
@@ -75,7 +75,7 @@ const Login = () => {
         //   token: res.data.token,
         // });
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        navigate("/");
+        navigate("/profile");
       } else if (res.data.flag === 2) {
         toast.error("Retry!!");
         navigate("/login");
@@ -86,7 +86,7 @@ const Login = () => {
     } catch (error) {
       console.log(error);
       navigate("/login");
-      toast.error("something went wrong");
+      toast.error("Something went wrong!");
     }
   };
 
@@ -108,6 +108,8 @@ const Login = () => {
     setSeller(!seller);
   };
   return (
+    <>
+    <ToastContainer/>
     <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
       <MDBTabs
         pills
@@ -228,6 +230,7 @@ const Login = () => {
         </MDBTabsPane>
       </MDBTabsContent>
     </MDBContainer>
+    </>
   );
 };
 

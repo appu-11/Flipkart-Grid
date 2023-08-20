@@ -2,6 +2,9 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Navbar";
+import Button from "react-bootstrap/esm/Button";
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -19,10 +22,6 @@ const Home = () => {
             localStorage.removeItem("user");
             setUser(null);
         }
-    };
-
-    const handleWallet = () => {
-        navigate("/wallet");
     };
 
     if((isAuthenticated && user)) {
@@ -44,7 +43,10 @@ const Home = () => {
     }
 
     return (
-        <Header/>
+        <>
+            <Header/>
+            <ToastContainer />
+        </>
     );
 };
 export default Home;

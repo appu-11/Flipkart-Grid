@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Sikka from "../contract_data/Sikka.json";
 import { ethers } from "ethers";
 import "./cart.css";
-import { toast } from "react-hot-toast";
+import { toast, ToastContainer} from "react-toastify";
 
 const Cart = () => {
   const contractaddress = process.env.REACT_APP_contract_address;
@@ -20,6 +20,7 @@ const Cart = () => {
   const [maxcoin, setMaxcoin] = useState(0);
   const [inprocess, setInprocess] = useState(false);
   const [earncoins, setEarncoins] = useState(0);
+  const [showReview, setShowReview] = useState(false);
 
   useEffect(() => {
     const getwalletData = async () => {
@@ -44,7 +45,9 @@ const Cart = () => {
       }
     };
     if (localStorage.getItem("user") === null) {
-      alert("Please login to view cart");
+      toast.error("Please Login to view cart", {
+        position: toast.POSITION.TOP_RIGHT
+      });
     } else {
       getwalletData();
     }
@@ -80,7 +83,9 @@ const Cart = () => {
         }
       } catch (err) {
         console.log(err);
-        alert("Try again");
+        toast.error("Try Again!", {
+          position: toast.POSITION.TOP_RIGHT
+      });
       }
     };
     fetchData();
@@ -102,11 +107,15 @@ const Cart = () => {
           const res = await contract.redeem(balance);
           await res.wait();
           if (res) {
-            alert("Coins Redeemed Successful");
+            toast.success("Sikke Redeemed Successfully!", {
+              position: toast.POSITION.TOP_RIGHT
+          });
             setBalance(balance - maxcoin);
             handleBuy();
           } else {
-            alert("try again");
+            toast.error("Try Again!", {
+              position: toast.POSITION.TOP_RIGHT
+            });
           }
         } catch (error) {
           console.log("Error: ", error);
@@ -125,7 +134,9 @@ const Cart = () => {
         { email: user.email }
       );
       if (response) {
-        alert("Transaction Successful");
+        toast.success("Trasaction Successful", {
+          position: toast.POSITION.TOP_RIGHT
+        });
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
@@ -135,15 +146,48 @@ const Cart = () => {
         );
         const earn = await contract.earn(earncoins);
         await earn.wait();
-        alert("You Earned Royalty Coins");
-        navigate("/profile");
+        toast.success("You Earned Sikke", {
+          position: toast.POSITION.TOP_RIGHT
+        });
+        setShowReview(true);
       } else {
-        alert("try again");
+        toast.error("Try Again", {
+          position: toast.POSITION.TOP_RIGHT
+        });
       }
     } catch (err) {
       console.log(err);
     }
   };
+
+  const handleSubmit = () => {
+    navigate("/profile");
+  }
+
+  const handleSubmitreward = async() => {
+    try{
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(
+        contractaddress,
+        Sikka.abi,
+        signer
+      );
+      const earn = await contract.earn(50);
+      await earn.wait();
+      
+      toast.success("Review Submitted",{
+        position: toast.POSITION.TOP_RIGHT
+      });
+    }
+    catch(err){
+      toast.error("Try Again",{
+        position: toast.POSITION.TOP_RIGHT
+      });
+    }
+    
+    navigate("/profile");
+  }
 
   if (data === null) {
     return (
@@ -155,9 +199,53 @@ const Cart = () => {
     );
   }
 
+  if(showReview) {
+    return(
+      <>
+      <Header />
+      <Container className = "d-flex flex-direction-row">
+      <Container className="mt-5 ml-5">
+        <span>Submit a Review</span>
+      <input
+        type="text"
+        className="review-input form-control mt-3 "
+        />
+      <Button variant="light" style={{marginRight:"2vw", marginLeft:"35vw", marginTop:"4vh"}} onClick={handleSubmit}>Cancel</Button>
+      <Button variant="success" onClick={handleSubmitreward}>Submit</Button>
+      </Container>
+      <div
+          className="right-conatiner"
+          style={{
+            width: "30vw",
+            display: "flex",
+            flexDirection: "column",
+            marginLeft: "3vw",
+            border: "solid",
+            marginTop: "10vh",
+            padding: "2%",
+            borderRadius: "10px",
+          }}
+        >
+          <span
+            style={{ marginTop: "2vh", fontWeight: "bold", textAlign:"center" }}
+          >
+            COIN BALANCE : {balance} <i class="bi bi-coin"></i>
+          </span>
+          <span
+            style={{ marginTop: "10vh", fontSize: "large", fontWeight: "bold" }}
+          >
+            Total Price ({data.length} items): &#8377; 0
+          </span>
+        </div>
+      </Container>
+        
+      </>
+    );
+  }
   return (
     <>
       <Header />
+      <ToastContainer/>
       <div
         className="class-conatainer"
         style={{

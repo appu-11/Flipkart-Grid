@@ -41,3 +41,18 @@
     }
   }
   
+  .review-input {
+    width: 100%;
+    max-width: 50vw; 
+    min-height: 20vh;
+    padding: 10px;
+    border: 1px solid #ced4da; 
+    border-radius: 5px;
+    transition: border-color 0.2s ease-in-out;
+  }
+  
+  .review-input:focus {
+    border-color: #80bdff; 
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); 
+  }

@@ -1,6 +1,6 @@
 import Container from 'react-bootstrap/Container';
 import Image from 'react-bootstrap/Image';
-import "./Product.css";
+import "./Machine.css";
 import Header from '../components/Navbar';
 import Button from 'react-bootstrap/esm/Button';
 import machine from './images/machine.jpg';
@@ -8,6 +8,7 @@ import machine1 from './images/machine1.jpg';
 import machine2 from './images/machine2.jpg';
 import machine3 from './images/machine3.jpg';
 import { useState } from 'react';
+import {toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 
@@ -28,7 +29,9 @@ const Machine = () => {
 
     const handleAddtocart = async() => {
         if(user === null) {
-            alert("Please login to add to cart");
+            toast.success("Please Login first!!", {
+                position: toast.POSITION.TOP_RIGHT
+            });
             navigate("/login");
         }
         else{
@@ -36,10 +39,14 @@ const Machine = () => {
             console.log(email);
             const res = await axios.post('http://localhost:8080/api/cart/addtocart', {name, quantity, email, price});
             if(res.data.success) {
-                alert("Added to cart");
+                toast.success("Added to cart", {
+                    position: toast.POSITION.TOP_RIGHT
+                });
             }
             else{
-                alert("Error in adding to cart");
+                toast.error("Error in adding to cart", {
+                    position: toast.POSITION.TOP_RIGHT
+                });
             }
         }
     };
@@ -61,6 +68,7 @@ const Machine = () => {
     return (
         <>
             <Header/>
+            <ToastContainer/>
             <div className = "product">
                 <Container className='d-flex flex-col'>
                     <div  className='image mr-2'>
@@ -85,16 +93,16 @@ const Machine = () => {
                         Highlights:
                         <div className='highlights' >
                             <ul  className='highlist'>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     Fully Automatic Front Load Washing Machines have Great Wash Quality with very less running cost
                                 </li>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     1400 rpm : Higher the spin speed, lower the drying time
                                 </li>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     5 Star Rating
                                 </li>
-                                <li>
+                                <li style={{ listStyleType: 'disc' }}>
                                     8 kg
                                 </li>
                             </ul>

@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 import Sikka from "../contract_data/Sikka.json";
 import History from "../components/History";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
 
 const Profile = () =>{
@@ -55,7 +56,9 @@ const Profile = () =>{
           }
         }
         else{
-          alert("Please install Metamask");
+          toast.error("Please install Metamask", {
+            position: toast.POSITION.TOP_RIGHT
+          });
           window.open("https://metamask.io/","_blank");
         }
       } catch (err) {
@@ -81,9 +84,13 @@ const Profile = () =>{
         const res = await contract.registerUser();
         await res.wait();
         if (res) {
-          alert("Claimed 200 Royalty Coins");
+          toast.success("Claimed 200 Sikke", {
+            position: toast.POSITION.TOP_RIGHT
+          });
         } else {
-          alert("try again");
+          toast.error("Something went wrong!", {
+            position: toast.POSITION.TOP_RIGHT
+        });
         }
         const response = await axios.post(
           "http://localhost:8080/api/auth/claim",
@@ -154,7 +161,9 @@ const Profile = () =>{
         }
         catch(error){
           console.log(error.message);
-          alert(error.message)
+          toast.error(error.message, {
+            position: toast.POSITION.TOP_RIGHT
+        });
         }
       }
     }
@@ -167,6 +176,7 @@ const Profile = () =>{
   return (
     <>
       <Header />
+      <ToastContainer/>
       <div style={{ marginLeft: "5vw", marginTop: "3vh", display: "flex" }}>
         <span>Current Balance : {balance}</span>
         {user && !user.claimed && (
