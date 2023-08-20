@@ -9,7 +9,7 @@ const History = () => {
   const [transactionhistory, setTransactionhistory] = useState([]);
   const [history, setHistory] = useState([]);
   const [purchasehistory, setPurchasehistory] = useState([]);
-
+  const [flag, setFlag] = useState(true);
   useEffect(() => {
     const init = async () => {
       try {
@@ -26,15 +26,16 @@ const History = () => {
             const userAddress = (await signer).address;
 
             // For Users
-            if(user.seller === false){
-
+            if (user.seller === false) {
               const HistFilter = contract.filters.history(userAddress, null);
               const HistEvents = await contract.queryFilter(HistFilter);
               const hist = [];
               const keys = Object.keys(HistEvents).reverse();
               console.log(contract);
               for (let i = 0; i < keys.length; i++) {
-                const date = new Date(Number(HistEvents[keys[i]].args[3]) * 1000);
+                const date = new Date(
+                  Number(HistEvents[keys[i]].args[3]) * 1000
+                );
                 const temp = {
                   value: Number(HistEvents[keys[i]].args[1]),
                   reason: HistEvents[keys[i]].args[2],
@@ -46,13 +47,18 @@ const History = () => {
             }
 
             // For Sellers
-            if(user.seller === true){
-              const transferHistFilter = contract.filters.transferhist(userAddress);
-              const transferHistEvents = await contract.queryFilter(transferHistFilter);
+            if (user.seller === true) {
+              const transferHistFilter =
+                contract.filters.transferhist(userAddress);
+              const transferHistEvents = await contract.queryFilter(
+                transferHistFilter
+              );
               const hist = [];
               const keys = Object.keys(transferHistEvents).reverse();
-              for(let i = 0; i < keys.length; i++) {
-                const date = new Date(Number(transferHistEvents[keys[i]].args[3]) * 1000);
+              for (let i = 0; i < keys.length; i++) {
+                const date = new Date(
+                  Number(transferHistEvents[keys[i]].args[3]) * 1000
+                );
                 const temp = {
                   value: Number(transferHistEvents[keys[i]].args[2]),
                   touser: transferHistEvents[keys[i]].args[1],
@@ -61,12 +67,17 @@ const History = () => {
                 hist.push(temp);
               }
               setTransactionhistory(hist);
-              const purchaseHistFilter = contract.filters.PurchasedTokens(userAddress);
-              const purchaseHistEvents = await contract.queryFilter(purchaseHistFilter);
+              const purchaseHistFilter =
+                contract.filters.PurchasedTokens(userAddress);
+              const purchaseHistEvents = await contract.queryFilter(
+                purchaseHistFilter
+              );
               const hist1 = [];
               const keys1 = Object.keys(purchaseHistEvents).reverse();
-              for(let i = 0; i < keys1.length; i++) {
-                const date = new Date(Number(purchaseHistEvents[keys1[i]].args[2]) * 1000);
+              for (let i = 0; i < keys1.length; i++) {
+                const date = new Date(
+                  Number(purchaseHistEvents[keys1[i]].args[2]) * 1000
+                );
                 const temp = {
                   value: Number(purchaseHistEvents[keys1[i]].args[1]),
                   timestamp: date.toLocaleString(),
@@ -75,6 +86,13 @@ const History = () => {
               }
               // setPurchasehistory(purchaseHistEvents);
               setPurchasehistory(hist1);
+            }
+            if (
+              history == 0 &&
+              transactionhistory == 0 &&
+              purchasehistory == 0
+            ) {
+              setFlag(false);
             }
           } catch (error) {
             console.log("Error: ", error);
@@ -86,44 +104,57 @@ const History = () => {
       }
     };
 
-        init();
-    },[]);
-    
-    if(history)
-        console.log(history, "redeemHistory");
-    if(purchasehistory){
-      console.log(purchasehistory,"purchasehistory")
-    }
-    if(transactionhistory){
-      console.log(transactionhistory,"transactionhistory")
-    }
-    
-    return(
-        <>
-            {/* {redeemhistory && redeemhistory[0].args.map((item, index) => {
-                <div>
-                    hello
-                    <span>{item}</span>
-                </div>
-            })} */}
+    init();
+  }, []);
+
+  if (history) console.log(history, "redeemHistory");
+  if (purchasehistory) {
+    console.log(purchasehistory, "purchasehistory");
+  }
+  if (transactionhistory) {
+    console.log(transactionhistory, "transactionhistory");
+  }
+
+  return (
+    <>
       <div>
-        {history.length > 0 ? (
-          <ul className="history-list">
-            {history.map((obj, index) => (
-              <li className="history-item" key={index}>
-                <div className="history-details">
-                  <span className="history-value">Points: {obj.value}</span>
-                  <span className="history-reason">{obj.reason}</span>
+        {history.length > 0 ||
+        transactionhistory.length > 0 ||
+        purchasehistory.length > 0 ? (
+          <>
+            {history.length > 0 && (
+              <>
+                <div style={{ marginLeft: "10vw", fontWeight: "700" }}>
+                  History:
                 </div>
-                <span
-                  className="history-timestamp"
-                  style={{ marginRight: "2" }}
-                >
-                  {obj.timestamp}
-                </span>
-              </li>
-            ))}
-          </ul>
+                <ul className="history-list">
+                  {/* Rendering history items */}
+                </ul>
+              </>
+            )}
+
+            {transactionhistory.length > 0 && (
+              <>
+                <div style={{ marginLeft: "10vw", fontWeight: "700" }}>
+                  Transaction History:
+                </div>
+                <ul className="history-list">
+                  {/* Rendering transaction history items */}
+                </ul>
+              </>
+            )}
+
+            {purchasehistory.length > 0 && (
+              <>
+                <div style={{ marginLeft: "10vw", fontWeight: "700" }}>
+                  Purchase History:
+                </div>
+                <ul className="history-list">
+                  {/* Rendering purchase history items */}
+                </ul>
+              </>
+            )}
+          </>
         ) : (
           <div>
             <h1 style={{ marginTop: "15vh", marginLeft: "37vw" }}>

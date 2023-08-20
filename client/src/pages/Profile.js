@@ -8,16 +8,15 @@ import History from "../components/History";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 
-
-const Profile = () =>{
-    const contractaddress = process.env.REACT_APP_contract_address;
-    const navigate = useNavigate();
-    const [user, setUser] = useState(null);
-    const [balance, setBalance] = useState(0);
-    const [isClaiming, setIsClaiming] = useState(false);
-    const [numberOfTokens, setNumberOfTokens] = useState(0);
-    const [giftPublicKey, setGiftPublicKey] = useState('');
-    const [giftToken, setGiftToken] = useState(0);
+const Profile = () => {
+  const contractaddress = process.env.REACT_APP_contract_address;
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [balance, setBalance] = useState(0);
+  const [isClaiming, setIsClaiming] = useState(false);
+  const [numberOfTokens, setNumberOfTokens] = useState(0);
+  const [giftPublicKey, setGiftPublicKey] = useState("");
+  const [giftToken, setGiftToken] = useState(0);
 
   if (user === null && localStorage.getItem("user")) {
     setUser(JSON.parse(localStorage.getItem("user")));
@@ -30,9 +29,12 @@ const Profile = () =>{
 
   const handleTokenChange = (event) => {
     let newValue = event.target.value;
-    newValue = newValue.replace(/^0+/, '');
+    newValue = newValue.replace(/^0+/, "");
 
-    if (newValue === '' || (parseInt(newValue, 10) <= 100000 && parseInt(newValue, 10) > 0)) {
+    if (
+      newValue === "" ||
+      (parseInt(newValue, 10) <= 100000 && parseInt(newValue, 10) > 0)
+    ) {
       setNumberOfTokens(newValue);
     }
   };
@@ -54,12 +56,11 @@ const Profile = () =>{
           } catch (error) {
             console.log("Error: ", error);
           }
-        }
-        else{
+        } else {
           toast.error("Please install Metamask", {
-            position: toast.POSITION.TOP_RIGHT
+            position: toast.POSITION.TOP_RIGHT,
           });
-          window.open("https://metamask.io/","_blank");
+          window.open("https://metamask.io/", "_blank");
         }
       } catch (err) {
         console.log(err);
@@ -85,12 +86,12 @@ const Profile = () =>{
         await res.wait();
         if (res) {
           toast.success("Claimed 200 Sikke", {
-            position: toast.POSITION.TOP_RIGHT
+            position: toast.POSITION.TOP_RIGHT,
           });
         } else {
           toast.error("Something went wrong!", {
-            position: toast.POSITION.TOP_RIGHT
-        });
+            position: toast.POSITION.TOP_RIGHT,
+          });
         }
         const response = await axios.post(
           "http://localhost:8080/api/auth/claim",
@@ -104,15 +105,15 @@ const Profile = () =>{
       }
     }
   };
-  const handleBuyClick = async() => {
-    try{
-      if(window.ethereum){
+  const handleBuyClick = async () => {
+    try {
+      if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
-            contractaddress,
-            Sikka.abi,
-            signer
+          contractaddress,
+          Sikka.abi,
+          signer
         );
         const res = await contract.purchaseTokens(numberOfTokens);
         await res.wait();
@@ -120,54 +121,52 @@ const Profile = () =>{
         setBalance(Number(bal));
         setNumberOfTokens(0);
       }
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
     }
-    
   };
 
   const handlegiftTokenChange = (event) => {
     let newValue = event.target.value;
-    newValue = newValue.replace(/^0+/, '');
+    newValue = newValue.replace(/^0+/, "");
 
-    if (newValue === '' || (parseInt(newValue, 10) <= 500 && parseInt(newValue, 10) > 0)) {
+    if (
+      newValue === "" ||
+      (parseInt(newValue, 10) <= 500 && parseInt(newValue, 10) > 0)
+    ) {
       setGiftToken(newValue);
     }
-  }
-  
+  };
+
   const handlegiftPublicKeyChange = (event) => {
     setGiftPublicKey(event.target.value);
-  }
+  };
 
-  const handleSubmitgift = async() => {
-    try{
-      if(window.ethereum){
+  const handleSubmitgift = async () => {
+    try {
+      if (window.ethereum) {
         const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = await provider.getSigner();
         const contract = new ethers.Contract(
-            contractaddress,
-            Sikka.abi,
-            signer
+          contractaddress,
+          Sikka.abi,
+          signer
         );
-        try{
-
+        try {
           const res = await contract.Tansfer(giftPublicKey, giftToken);
           await res.wait();
           const bal = await contract.balanceOf();
           setBalance(Number(bal));
           setGiftToken(0);
-          setGiftPublicKey('');
-        }
-        catch(error){
+          setGiftPublicKey("");
+        } catch (error) {
           console.log(error.message);
           toast.error(error.message, {
-            position: toast.POSITION.TOP_RIGHT
-        });
+            position: toast.POSITION.TOP_RIGHT,
+          });
         }
       }
-    }
-    catch(err){
+    } catch (err) {
       console.log(err);
       console.log("error in sending gift");
     }
@@ -176,7 +175,7 @@ const Profile = () =>{
   return (
     <>
       <Header />
-      <ToastContainer/>
+      <ToastContainer />
       <div style={{ marginLeft: "5vw", marginTop: "3vh", display: "flex" }}>
         <span>Current Balance : {balance}</span>
         {user && !user.claimed && (
@@ -210,7 +209,7 @@ const Profile = () =>{
               onChange={handleTokenChange}
               max="100000"
               onKeyDown={(e) => {
-                if (e.key === '-') {
+                if (e.key === "-") {
                   e.preventDefault();
                 }
               }}
@@ -225,7 +224,7 @@ const Profile = () =>{
               style={{ width: "17vw", marginLeft: "1.3vw", marginRight: "1vw" }}
               type="text"
               value={giftPublicKey}
-              onChange={handlegiftPublicKeyChange} 
+              onChange={handlegiftPublicKeyChange}
             ></input>
             <input
               placeholder="amount"
@@ -236,7 +235,7 @@ const Profile = () =>{
               onChange={handlegiftTokenChange}
               max="500"
               onKeyDown={(e) => {
-                if (e.key === '-') {
+                if (e.key === "-") {
                   e.preventDefault();
                 }
               }}
@@ -254,7 +253,7 @@ const Profile = () =>{
           marginTop: "2%",
         }}
       ></div>
-      <div style={{ marginLeft: "10vw", fontWeight: "700" }}>History:</div>
+
       <History />
     </>
   );

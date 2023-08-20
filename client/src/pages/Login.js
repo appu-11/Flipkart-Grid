@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import {toast, ToastContainer} from 'react-toastify';
+import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import {
   MDBContainer,
@@ -50,7 +50,7 @@ const Login = () => {
       });
       console.log(res.data);
       if (res.data.success) {
-        toast.success(res.data.message);
+        alert(res.data.message);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         navigate("/profile");
       } else {
@@ -109,127 +109,127 @@ const Login = () => {
   };
   return (
     <>
-    <ToastContainer/>
-    <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
-      <MDBTabs
-        pills
-        justify
-        className="mb-3 d-flex flex-row justify-content-between"
-      >
-        <MDBTabsItem>
-          <MDBTabsLink
-            onClick={() => handleJustifyClick("tab1")}
-            active={justifyActive === "tab1"}
-          >
-            Login
-          </MDBTabsLink>
-        </MDBTabsItem>
-        <MDBTabsItem>
-          <MDBTabsLink
-            onClick={() => handleJustifyClick("tab2")}
-            active={justifyActive === "tab2"}
-          >
-            Register
-          </MDBTabsLink>
-        </MDBTabsItem>
-      </MDBTabs>
+      <ToastContainer />
+      <MDBContainer className="p-3 my-5 d-flex flex-column w-50">
+        <MDBTabs
+          pills
+          justify
+          className="mb-3 d-flex flex-row justify-content-between"
+        >
+          <MDBTabsItem>
+            <MDBTabsLink
+              onClick={() => handleJustifyClick("tab1")}
+              active={justifyActive === "tab1"}
+            >
+              Login
+            </MDBTabsLink>
+          </MDBTabsItem>
+          <MDBTabsItem>
+            <MDBTabsLink
+              onClick={() => handleJustifyClick("tab2")}
+              active={justifyActive === "tab2"}
+            >
+              Register
+            </MDBTabsLink>
+          </MDBTabsItem>
+        </MDBTabs>
 
-      <MDBTabsContent>
-        <MDBTabsPane show={justifyActive === "tab1"}>
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Email address"
-            id="form1"
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-          />
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Password"
-            id="form2"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-
-          <div className="d-flex justify-content-end mx-4 mb-4">
-            <MDBCheckbox
-              name="flexCheck"
-              value=""
-              id="flexCheckDefault"
-              label="Remember me"
-              onChange={handleCheckboxChange}
+        <MDBTabsContent>
+          <MDBTabsPane show={justifyActive === "tab1"}>
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Email address"
+              id="form1"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
             />
-          </div>
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Password"
+              id="form2"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
 
-          <MDBBtn className="mb-4 w-100" onClick={handleLogin1}>
-            Sign in
-          </MDBBtn>
-          <p className="text-center">
-            Not a member? <a href="#!">Register</a>
-          </p>
-        </MDBTabsPane>
-
-        <MDBTabsPane show={justifyActive === "tab2"}>
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Username"
-            id="form1"
-            type="text"
-            value={name}
-            onChange={handleUsernameChange}
-          />
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Email"
-            id="form1"
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-          />
-          <MDBInput
-            wrapperClass="mb-4"
-            label="Password"
-            id="form1"
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-
-          <div
-            className="bottom-conatainer"
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              marginBottom: "2vh",
-            }}
-          >
-            <div style={{ width: "80%" }}>
-              <span>Are you a seller?</span>
-              <input
-                type="checkbox"
-                id="switch"
-                className="checkbox"
-                style={{ width: "2.2vw", height: "2.2vh" }}
-                onChange={handleSeller}
+            <div className="d-flex justify-content-end mx-4 mb-4">
+              <MDBCheckbox
+                name="flexCheck"
+                value=""
+                id="flexCheckDefault"
+                label="Remember me"
+                onChange={handleCheckboxChange}
               />
             </div>
-            <MDBCheckbox
-              name="flexCheck"
-              value=""
-              id="flexCheckDefault"
-              label="Remember me"
-              onChange={handleCheckboxChange1}
-            />
-          </div>
 
-          <MDBBtn className="mb-4 w-100" onClick={handleSignup}>
-            Sign up
-          </MDBBtn>
-        </MDBTabsPane>
-      </MDBTabsContent>
-    </MDBContainer>
+            <MDBBtn className="mb-4 w-100" onClick={handleLogin1}>
+              Sign in
+            </MDBBtn>
+            <p className="text-center">
+              Not a member? <a href="#!">Register</a>
+            </p>
+          </MDBTabsPane>
+
+          <MDBTabsPane show={justifyActive === "tab2"}>
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Username"
+              id="form1"
+              type="text"
+              value={name}
+              onChange={handleUsernameChange}
+            />
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Email"
+              id="form1"
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+            />
+            <MDBInput
+              wrapperClass="mb-4"
+              label="Password"
+              id="form1"
+              type="password"
+              value={password}
+              onChange={handlePasswordChange}
+            />
+
+            <div
+              className="bottom-conatainer"
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                marginBottom: "2vh",
+              }}
+            >
+              <div style={{ width: "80%" }}>
+                <span>Are you a seller?</span>
+                <input
+                  type="checkbox"
+                  id="switch"
+                  className="checkbox"
+                  style={{ width: "2.2vw", height: "2.2vh" }}
+                  onChange={handleSeller}
+                />
+              </div>
+              <MDBCheckbox
+                name="flexCheck"
+                value=""
+                id="flexCheckDefault"
+                label="Remember me"
+                onChange={handleCheckboxChange1}
+              />
+            </div>
+
+            <MDBBtn className="mb-4 w-100" onClick={handleSignup}>
+              Sign up
+            </MDBBtn>
+          </MDBTabsPane>
+        </MDBTabsContent>
+      </MDBContainer>
     </>
   );
 };
